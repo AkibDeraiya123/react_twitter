@@ -1,0 +1,52 @@
+body {
+  background-color: #e9ebee;
+}
+.navbar-inverse .navbar-nav>li>a:hover {
+  color: black ;
+}
+.navbar-header .navbar-brand:hover {
+  color:black;
+}
+.modal-header h4, .close {
+      background-color: #5cb85c;
+      color:white !important;
+      text-align: center;
+      font-size: 30px;
+  }
+.modal-footer {
+      background-color: #f9f9f9;
+  }
+.tab-content>.active {
+    display: inline-block;
+    width: 100%;
+}
+.tab-pane {
+  margin: 10px auto;
+}
+.modal-header {
+  background: #fff;
+    border-bottom: 1px solid #e1e8ed;
+    border-radius: 6px 6px 0 0;
+    cursor: move;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+.tweetall {
+  background-color: white;
+  transition: all 0.3s;
+}
+
+.tweetall:hover {
+  background-color:#edeff1;
+}
+.profilecover {
+    background: #00848F;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    font-family: sans-serif;
+}
+
+.navbar-toggle {
+  background: black;
+}
