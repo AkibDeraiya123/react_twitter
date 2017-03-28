@@ -1,0 +1,173 @@
+extends ./layouts/main.pug
+//- - results = typeof(results) != 'undefined' ? results : { }
+block content
+
+  div(id="loader-wrapper")
+
+  - profile ? profile : 'default.png';
+      //- p
+      //-   | #{profileData}
+      - if(profile == null){ profile = 'default.png';}
+  include header
+  div(id="main")
+    div(class="wrapper")
+      section(id="content")
+        div(class="container")
+          div(id="profile-page", class="section")
+            div(id="profile-page-header", class="card")
+              div(class="card-image waves-effect waves-block waves-light" style="height:250px;")
+                img(class="activator",src="images/user-profile-bg.jpg")
+              figure(class="card-profile-image" style="width: 110px;position: absolute;top: 190px;z-index: 1;left: 40px;cursor: pointer;margin: 0;")
+                img(src="images/profile/" + profileData.profile,alt="Profile Image",class="materialboxed circle z-depth-2 responsive-img activator")
+              div(class="card-content" style="margin-top:-40px;")
+                div(class="row")
+
+                  div(class="col s3 offset-s2")
+                        h4(class="card-title grey-text text-darken-4")= profileData.fname + ' ' + profileData.lname
+                        //- p(class="medium-small grey-text") Project Manager
+                  div(class="col s2 center-align")
+                        h4(class="card-title grey-text text-darken-4")=tweet1.length
+                        p(class="medium-small grey-text") Tweets
+                  div(class="col s2 center-align")
+                        h4(class="card-title grey-text text-darken-4")=follow1.length
+                        p(class="medium-small grey-text") Followers
+                  div(class="col s2 center-align")
+                        h4(class="card-title grey-text text-darken-4")=follow1.length
+                        p(class="medium-small grey-text") Follow
+
+            div(id="profile-page-content", class="row")
+              div(class="col s12 m12 l12" id="profile-page-wall")
+                div(id="profile-page-wall-share" class="row")
+                  div(class="col s12")
+                    ul(class="tabs tab-profile z-depth-1 light-blue" style="width: 100%;")
+                      li(class="tab col s3")
+                        a(style="z-index:0",class="white-text waves-effect waves-light" href="#Timeline")
+                          i(class="mdi-editor-border-color active") Timeline
+                      li(class="tab col s3")
+                        a(style="z-index:0",class="white-text waves-effect waves-light" href="#Followers")
+                          i(class="mdi-editor-border-color") Follow
+                      li(class="tab col s3")
+                        a(style="z-index:0",class="white-text waves-effect waves-light" href="#About")
+                          i(class="mdi-editor-border-color") About You
+                      div(class="indicator" style="right: -4px; left: 1552px;")
+
+                    div(id="Timeline" class="tab-content col s12  lighten-4 card grey" style="display: none;")
+                      div(class="row")
+                        div(class="")
+                          div(class="row")
+                            div(class="col s12 m12 l12")
+                              div(class="col s12 m12 l12")
+                                div(class="card-panel")
+                                  h4(class="header2") Add New Tweet
+                                  div(class="row")
+                                    form(class="formValidate",enctype="multipart/form-data", id="user_tweet" method="post" action="/tweet")
+                                      div(class="row")
+                                        div(class="input-field col s12 m6 l8")
+                                          textarea(id="ccomment" name="ccomment",class="materialize-textarea validate", type="text" data-error=".errorTxt1")
+                                          label(for="ccomment") Tweet *
+                                          div(class="errorTxt1")
+                                        div(class="input-field col s12 m12 l8")
+                                          input(id="profile" name="profile" type="file" class="dropify" data-default-file="")
+                                        div(class="input-field col s12 m6 l8 center",style="z-index:0",)
+                                          input(name="submit" type="submit" class="btn waves-effect waves-light submit" value="submit")
+
+                            each book in tweet1
+                              -const a = new Date(book.timest);
+                              div(class="col s12 m12 l12 ")
+                                div(class="col s12 m12 l12")
+                                  div(class="card horizontal")
+                                    div(class="card-stacked")
+                                      div(class="card-content")
+                                        div(class="col s12 m12 l12")
+                                          div(class="col row" style="padding: 0px;")
+                                            div(class="")
+                                              img(src="images/profile/" + book.profile, alt="" class="circle responsive-img" style="height:34px")
+                                          span(class="col" style="margin-left:10px")= book.fname + " " + book.lname
+                                          div(class="grey-text col right ")= a.getDate() + "/" + (a.getMonth()+1) + "/" + a.getFullYear() + " " + a.getHours() + ":" + a.getMinutes() + ":" + a.getSeconds()
+                                        p= book.tweet
+                                        div(class="card-image profile-medium")
+                                        - if(book.post_image) {
+                                            img(class="materialboxed responsive-img profile-post-image profile-medium" src="images/tweet/" + book.post_image)
+                                        - }
+
+
+                    div(id="Followers" class="tab-content col s12  lighten-4 card grey" style="display: none;")
+                      div(class="row")
+                        div(class="")
+                          div(class="col s12 m12 l12 ")
+                            each book in follow1
+                              div(class="col s12 m6 l4")
+                                div(class="card horizontal")
+                                  div(class="card-stacked")
+                                    div(class="card-content")
+                                      div(class="col s12 m12 l12")
+                                        div(class="col row" style="padding: 0px;")
+                                          div(class="")
+                                            img(src="/images/profile/" + book.profile alt="" class="circle responsive-img" style="height:34px")
+                                        span(class="col" style="margin-left:10px")= book.fname + " " + book.lname
+                                        div(class="grey-text col right ")
+                                          a(style="z-index:0",class="btn waves-effect waves-light right submit waves-input-wrapper",href="/unfollow/" + book.id) Unfollow
+
+                    div(id="About" class="tab-content col s12  lighten-4 card grey" style="display: none;transition: all 1s")
+                      div(class="row")
+                        div(class="")
+                          div(class="col s12 m12 l12")
+                            div(class="col s12 m12 l12")
+                              div(class="card horizontal")
+                                div(class="card-stacked")
+                                  div(class="card-content")
+                                    div(class="col s12 m12 l12") Profile :-
+
+                                        input#test3.with-gap(name='update', type='radio', value="show", checked)
+                                        label(for='test3') Show
+
+                                        input#test4.with-gap(name='update', type='radio', value="edit")
+                                        label(for='test4') Edit
+                                    div(class="col s12 m12 l12",id="show")
+                                      div(class="col s12 m12 l6 row" style="padding: 0px;")
+                                        div(class="responsive-table")
+                                          table(class="bordered")
+                                            tr
+                                              td
+                                                b Name :
+                                              td= profileData.fname + ' ' + profileData.lname
+                                            tr
+                                              td
+                                                b E-Mail :
+                                              td= profileData.email
+                                            tr
+                                              td
+                                                b Phone Number :
+                                              td= profileData.phone_no
+
+
+
+                                    div(class="container" id="edit", style="display:none;transition: all 1s")
+                                      form(class="formValidate" id="formValidate" method="post",enctype="multipart/form-data", action="/ProfileUpload")
+
+                                        div(class="input-field col s12 m12 l12")
+                                          label(for="Password") Firstname *
+                                          input(id="fname" name="fname" type="text" value=profileData.fname)
+
+                                        div(class="input-field col s12 m12 l12")
+                                          label(for="Password") Lastname *
+                                          input(id="lname" name="lname" type="text", value=profileData.lname)
+
+                                        div(class="input-field col s12 m12 l12")
+                                          label(for="Password") Phone *
+                                          input(id="phone" name="phone" type="text",value=profileData.phone_no)
+
+                                        h6(class="header2 center") Upload New Profile Image
+
+                                        div(class="input-field col s12 m12 l12")
+
+                                          input(id="profile" name="profile" type="file" class="dropify")
+
+                                        div(class="input-field col s8")
+                                          input(name="submit" type="submit" class="btn waves-effect waves-light right submit" value="Update")
+
+
+
+
+
+

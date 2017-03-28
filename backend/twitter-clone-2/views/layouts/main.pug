@@ -1,0 +1,9 @@
+doctype html
+html
+  include ./head.pug
+  if title == "Login" || title == "Register" || title == "Forgot Password"
+    body(class="indigo darken-1")
+  else
+    body(class="grey lighten-4")
+  block content
+  include ./footer.pug

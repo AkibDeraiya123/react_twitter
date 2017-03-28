@@ -1,0 +1,113 @@
+extends ./layouts/main.pug
+
+block content
+
+  div(id="loader-wrapper")
+  //- p= failed
+  //- include header
+  div(class="row")
+    -if(msg) {
+        h3.center(style="color:red")= msg
+    -}
+    div(class="col s12 m12 l12")
+      div(class="col s12 m12 l6")
+        div(class="card-panel")
+          h4(class="header2") Registration Forms
+          div(class="row")
+            form(class="formValidate" id="formValidate" method="post",enctype="multipart/form-data", action="/")
+              div(class="row")
+                div(class="input-field col s12 m6 l6")
+                  label(for="fname") Firstname *
+                  input(id="fname" name="fname" type="text" data-error=".errorTxt1")
+                  div(class="errorTxt1")
+                    -if(errors)
+                      each error in errors
+                        -if(error.param == 'fname')
+                          div#fname-error.error= error.msg
+
+                div(class="input-field col s12 m6 l6")
+                  label(for="lname") Lastname *
+                  input(id="lname" name="lname" type="text" data-error=".errorTxt5")
+                  div(class="errorTxt5")
+                    -if(errors)
+                      each error in errors
+                        -if(error.param == 'lname')
+                          div#lname-error.error= error.msg
+
+                div(class="input-field col s12")
+                  label(for="phone") Phone Number *
+                  input(id="phone" name="phone" type="text" data-error=".errorTxt6")
+                  div(class="errorTxt6")
+                    -if(errors)
+                      each error in errors
+                        -if(error.param == 'phone')
+                          div#phone-error.error= error.msg
+
+
+                div(class="input-field col s12")
+                  label(for="cemail") E-Mail *
+                  input(id="cemail" name="cemail" type="email" data-error=".errorTxt2")
+                  div(class="errorTxt2")
+                    -if(errors)
+                      each error in errors
+                        -if(error.param == 'cemail')
+                          div#cemail-error.error= error.msg
+
+                div(class="input-field col s12")
+                  label(for="Password") Password *
+                  input(id="password" name="password" type="password" data-error=".errorTxt3")
+                  div(class="errorTxt3")
+                    -if(errors)
+                      each error in errors
+                        -if(error.param == 'password')
+                          div#password-error.error= error.msg
+
+                div(class="input-field col s12")
+                  label(for="cpassword") Confirm Password *
+                  input(id="cpassword" name="cpassword" type="password" data-error=".errorTxt4")
+                  div(class="errorTxt4")
+                    -if(errors)
+                      each error in errors
+                        -if(error.param == 'cpassword')
+                          div#cpassword-error.error= error.msg
+                div(class="input-field col s12 m12 l12")
+                  input(id="profile" name="profile" type="file" class="dropify" data-default-file="")
+
+
+                div(class="input-field col s12")
+                  input(name="submit" type="submit" class="btn waves-effect waves-light right submit" value="submit")
+
+      div(class="col s12 m12 l6")
+        div(class="card-panel")
+          h4(class="header2") Login
+          -if(active)
+            div(style="color: red;")
+              h6.center#error= "* " + active
+          -if(msglogin)
+            div(style="color: steelblue;")
+              h6.center#error= "* " + msglogin
+          -if(failed)
+            div(style="color: red;")
+              h6.center#error= "* " + failed
+          div(class="row")
+            form(class="formValidate", id="login" method="post" action="/log")
+              div(class="row")
+                div(class="input-field col s12 m6 l6")
+                  label(for="email") E-mail *
+                  input(id="email" name="email" type="text" data-error=".errorTxt7")
+                  div(class="errorTxt7")
+
+                div(class="input-field col s12 m6 l6")
+                  label(for="pas") Password *
+                  input(id="pas" name="pas" type="password" data-error=".errorTxt8")
+                  div(class="errorTxt8")
+
+                div(class="input-field col s12")
+                  input(name="submit" type="submit" class="btn waves-effect waves-light right submit" value="Login")
+
+
+
+
+
+
+

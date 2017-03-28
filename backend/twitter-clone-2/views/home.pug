@@ -1,0 +1,43 @@
+extends ./layouts/main.pug
+block content
+
+  div(id="loader-wrapper")
+
+  include header
+  div(class="row")
+    div(class="container")
+      div(class="col s12 m12 l12 ")
+        div(class="row")
+          div(class="col s12 m12 l12")
+            div(class="col s12 m12 l12")
+              div(class="card-panel")
+                h4(class="header2") Add New Tweet
+                div(class="row")
+                  form(class="formValidate",enctype="multipart/form-data", id="user_tweet" method="post" action="/tweet")
+                    div(class="row")
+                      div(class="input-field col s12 m6 l8")
+                        textarea(id="ccomment" name="ccomment",class="materialize-textarea validate", type="text" data-error=".errorTxt1")
+                        label(for="ccomment") Tweet *
+                        div(class="errorTxt1")
+                      div(class="input-field col s12 m12 l8")
+                        input(id="profile" name="profile" type="file" class="dropify" data-default-file="")
+                      div(class="input-field col s8 right")
+                        input(name="submit" type="submit" class="btn waves-effect waves-light submit" value="submit")
+        div(class="col s12 m12 l12")
+          each book in data
+            -const a = new Date(book.timest)
+            div(class="card horizontal")
+              div(class="card-stacked")
+                div(class="card-content")
+                  div(class="col s12 m12 l12")
+                    div(class="col row" style="padding: 0px;")
+                      div(class="")
+                        img(src="images/profile/" + book.profile, alt="" class="circle responsive-img" style="height:34px")
+                    span(class="col" style="margin-left:10px")
+                      a(href='viewprofile/' + book.activation_number)= book.fname + " " + book.lname
+                    div(class="grey-text col right ")= a.getDate() + "/" + (a.getMonth()+1) + "/" + a.getFullYear() + " " + a.getHours() + ":" + a.getMinutes() + ":" + a.getSeconds()
+                  p= book.tweet
+                  div(class="card-image profile-medium")
+                  - if(book.post_image){
+                      img(class="materialboxed responsive-img profile-post-image profile-medium" src="images/tweet/" + book.post_image)
+                  - }

@@ -1,0 +1,28 @@
+div(class="navbar-fixed")
+    nav(class="nav-extended red")
+      div(class="nav-wrapper")
+        a(href="/home" class="brand-logo") Tweeter
+        a(href="/home" data-activates="mobile-demo" class="btn-medium waves-effect waves-light hide-on-large-only circle button-collapse" style=" padding: 0px 10px 0px 10px;")
+          i(class="fa fa-bars" style="margin:0px 0px 0px 20px")
+
+        ul(class="right hide-on-med-and-down")
+          li
+            a(href="/home") Home
+          li
+            a(href="/profile") Profile
+          li
+            a(href="/follow") Follow
+
+          li
+            a(href="/logout") Logout
+
+        ul(class="side-nav",style=" text-align: left;", id="mobile-demo")
+          li
+            a(href="/home") Home
+          li
+            a(href="/profile") Profile
+          li
+            a(href="/follow") Follow
+
+          li
+            a(href="/logout") Logout

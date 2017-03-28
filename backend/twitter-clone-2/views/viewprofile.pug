@@ -1,0 +1,128 @@
+extends ./layouts/main.pug
+//- - results = typeof(results) != 'undefined' ? results : { }
+block content
+  //- p= profileData
+  div(id="loader-wrapper")
+
+  - profile ? profile : 'default.png';
+      //- p
+      //-   | #{profileData}
+      - if(profile == null){ profile = 'default.png';}
+  include header
+  div(id="main")
+    div(class="wrapper")
+      section(id="content")
+        div(class="container")
+          div(id="profile-page", class="section")
+            div(id="profile-page-header", class="card")
+              div(class="card-image waves-effect waves-block waves-light" style="height:250px;")
+                img(class="activator",src="/images/user-profile-bg.jpg")
+              figure(class="card-profile-image" style="width: 110px;position: absolute;top: 190px;z-index: 1;left: 40px;cursor: pointer;margin: 0;")
+                img(src="/images/profile/" + profileData.profile,alt="Profile Image",class="materialboxed circle z-depth-2 responsive-img activator")
+              div(class="card-content" style="margin-top:-40px;")
+                div(class="row")
+
+                  div(class="col s3 offset-s2")
+                        h4(class="card-title grey-text text-darken-4")= profileData.fname + ' ' + profileData.lname
+                        //- p(class="medium-small grey-text") Project Manager
+                  div(class="col s2 center-align")
+                        h4(class="card-title grey-text text-darken-4")=tweet1.length
+                        p(class="medium-small grey-text") Tweets
+                  div(class="col s2 center-align")
+                        h4(class="card-title grey-text text-darken-4")=follow1.length
+                        p(class="medium-small grey-text") Follow
+                  div(class="col s2 center-align")
+                        h4(class="card-title grey-text text-darken-4")=follow1.length
+                        p(class="medium-small grey-text") Follow
+
+            div(id="profile-page-content", class="row")
+              div(class="col s12 m12 l12" id="profile-page-wall")
+                div(id="profile-page-wall-share" class="row")
+                  div(class="col s12")
+                    ul(class="tabs tab-profile z-depth-1 light-blue" style="width: 100%;")
+                      li(class="tab col s3")
+                        a(style="z-index:0",class="white-text waves-effect waves-light" href="#Timeline")
+                          i(class="mdi-editor-border-color active") Timeline
+                      li(class="tab col s3")
+                        a(style="z-index:0",class="white-text waves-effect waves-light" href="#Followers")
+                          i(class="mdi-editor-border-color") Follow
+                      li(class="tab col s3")
+                        a(style="z-index:0",class="white-text waves-effect waves-light" href="#About")
+                          i(class="mdi-editor-border-color") About
+                      div(class="indicator" style="right: -4px; left: 1552px;")
+
+                    div(id="Timeline" class="tab-content col s12  lighten-4 card grey" style="display: none;")
+                      div(class="row")
+                        div(class="")
+                          div(class="row")
+                            each book in tweet1
+                              -const a = new Date(book.timest);
+                              div(class="col s12 m12 l12 ")
+                                div(class="col s12 m12 l12")
+                                  div(class="card horizontal")
+                                    div(class="card-stacked")
+                                      div(class="card-content")
+                                        div(class="col s12 m12 l12")
+                                          div(class="col row" style="padding: 0px;")
+                                            div(class="")
+                                              img(src="/images/profile/" + book.profile, alt="" class="circle responsive-img" style="height:34px")
+                                          span(class="col" style="margin-left:10px")= book.fname + " " + book.lname
+                                          div(class="grey-text col right ")= a.getDate() + "/" + (a.getMonth()+1) + "/" + a.getFullYear() + " " + a.getHours() + ":" + a.getMinutes() + ":" + a.getSeconds()
+                                        p= book.tweet
+                                        div(class="card-image profile-medium")
+                                        - if(book.post_image) {
+                                            img(class="materialboxed responsive-img profile-post-image profile-medium" src="/images/tweet/" + book.post_image)
+                                        - }
+
+
+                    div(id="Followers" class="tab-content col s12  lighten-4 card grey" style="display: none;")
+                      div(class="row")
+                        div(class="")
+                          div(class="col s12 m12 l12 ")
+                            each book in follow1
+                              div(class="col s12 m6 l4")
+                                div(class="card horizontal")
+                                  div(class="card-stacked")
+                                    div(class="card-content")
+                                      div(class="col s12 m12 l12")
+                                        div(class="col row" style="padding: 0px;")
+                                          div(class="")
+                                            img(src="/images/profile/" + book.profile alt="" class="circle responsive-img" style="height:34px")
+                                        span(class="col" style="margin-left:10px")= book.fname + " " + book.lname
+
+
+                    div(id="About" class="tab-content col s12  lighten-4 card grey" style="display: none;transition: all 1s")
+                      div(class="row")
+                        div(class="")
+                          div(class="col s12 m12 l12")
+                            div(class="col s12 m12 l12")
+                              div(class="card horizontal")
+                                div(class="card-stacked")
+                                  div(class="card-content")
+
+                                    div(class="col s12 m12 l12",id="show")
+                                      div(class="col s12 m12 l6 row" style="padding: 0px;")
+                                        div(class="responsive-table")
+                                          table(class="bordered")
+                                            tr
+                                              td
+                                                b Name :
+                                              td= profileData.fname + ' ' + profileData.lname
+                                            tr
+                                              td
+                                                b E-Mail :
+                                              td= profileData.email
+                                            tr
+                                              td
+                                                b Phone Number :
+                                              td= profileData.phone_no
+
+
+
+
+
+
+
+
+
+

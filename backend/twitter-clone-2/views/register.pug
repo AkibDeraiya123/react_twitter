@@ -1,0 +1,90 @@
+extends ./layouts/main.pug
+
+block content
+
+
+    div(id='login-page' class='row')
+      div(class='col s12 z-depth-4 card-panel')
+        form(class='login-form formValidate' id='formValidate' method="post",enctype="multipart/form-data", action="/")
+          div(class='row')
+            div(class='input-field col s12 center')
+              h4 Register
+              p(class='center') Join to our community now !
+
+
+          .row.margin
+            .input-field.col.s12
+              i(class="mdi-action-account-circle prefix")
+              input(id="fname" name="fname" type="text" data-error=".errorTxt1")
+              label(for='username') Firstname
+              div(class="errorTxt1 center")
+                -if(errors)
+                  each error in errors
+                    -if(error.param == 'fname')
+                      div#fname-error.error= error.msg
+          .row.margin
+            .input-field.col.s12
+              i(class="mdi-action-account-circle prefix")
+              input(id="lname" name="lname" type="text" data-error=".errorTxt5")
+              label(for='username') Lastname
+              div(class="errorTxt5 center")
+                -if(errors)
+                  each error in errors
+                    -if(error.param == 'lname')
+                      div#lname-error.error= error.msg
+          .row.margin
+            .input-field.col.s12
+              i(class="mdi-communication-phone prefix")
+              input(id="phone" name="phone" type="text" data-error=".errorTxt6")
+              label(for='username') Phone Number
+              div(class="errorTxt6 center")
+                -if(errors)
+                  each error in errors
+                    -if(error.param == 'phone')
+                      div#phone-error.error= error.msg
+
+
+          .row.margin
+            .input-field.col.s12
+              i(class="mdi-communication-email prefix")
+              input(id="cemail" name="cemail" type="email" data-error=".errorTxt2")
+              label(for="cemail") E-Mail *
+              div(class="errorTxt2 center")
+                -if(errors)
+                  each error in errors
+                    -if(error.param == 'cemail')
+                      div#cemail-error.error= error.msg
+          .row.margin
+            .input-field.col.s12
+              i.mdi-action-lock-outline.prefix
+              label(for="Password") Password *
+              input(id="password" name="password" type="password" data-error=".errorTxt3")
+              div(class="errorTxt3 center")
+                -if(errors)
+                  each error in errors
+                    -if(error.param == 'password')
+                      div#password-error.error= error.msg
+          .row.margin
+            .input-field.col.s12
+              i.mdi-action-lock-outline.prefix
+              label(for="cpassword") Confirm Password *
+              input(id="cpassword" name="cpassword" type="password" data-error=".errorTxt4")
+              div(class="errorTxt4 center")
+                -if(errors)
+                  each error in errors
+                    -if(error.param == 'cpassword')
+                      div#cpassword-error.error= error.msg
+          div(class="input-field col s12 m12 l12")
+            input(id="profile" name="profile" type="file" class="dropify" data-default-file="")
+
+          .row
+            .input-field.col.s12
+              input(name="submit" type="submit" class="btn waves-effect waves-light col s12 submit" value="Register")
+
+              //- a.btn.waves-effect.waves-light.col.s12(href='index.html') Register Now
+            .input-field.col.s12
+              p.margin.center.medium-small.sign-up
+                | Already have an account?
+                a(href='/login') Login
+
+

@@ -1,0 +1,11 @@
+version: '2'
+services:
+  db:
+    image: postgres:9-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: inventoryps
+      POSTGRES_USER: akib
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data */

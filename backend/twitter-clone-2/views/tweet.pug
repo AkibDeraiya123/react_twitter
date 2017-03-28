@@ -1,0 +1,26 @@
+extends ./layouts/main.pug
+
+block content
+  include header
+  div(class="row")
+    div(class="col s12 m12 l12")
+      div(class="col s12 m12 l6")
+        div(class="card-panel")
+          h4(class="header2") Add New Tweet
+          div(class="row")
+            form(class="formValidate" id="user_tweet" method="post" action="/tweet")
+              div(class="row")
+                div(class="input-field col s12 m6 l12")
+                  textarea(id="ccomment" name="ccomment",class="materialize-textarea validate", type="text" data-error=".errorTxt1")
+                  label(for="ccomment") Tweet *
+                  div(class="errorTxt1")
+                div(class="input-field col s12")
+                  input(name="submit" type="submit" class="btn waves-effect waves-light right submit" value="submit")
+                    //- i(class="mdi-content-send right")
+
+
+
+
+
+
+

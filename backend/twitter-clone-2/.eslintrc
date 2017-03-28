@@ -1,0 +1,20 @@
+root: true
+
+env:
+  node: true
+  es6: true
+
+extends:
+  "airbnb-base"
+
+globals:
+  log: true
+
+rules:
+  vars-on-top: 0
+
+  # Warnings
+  max-len: [1]
+
+  # Errors
+  quotes: [1, "single", { "avoidEscape": true, "allowTemplateLiterals": true }]

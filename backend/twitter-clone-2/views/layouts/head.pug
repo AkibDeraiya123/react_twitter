@@ -1,0 +1,27 @@
+head
+  meta(charset='utf-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1, user-scalable=no')
+
+  title= title
+
+  link(rel='stylesheet' href='/css/style.css')
+
+  if (title == "Home")
+    link(rel='stylesheet' href='/css/style.min.css')
+
+  if (title == "Login" || title == "Register" || title == "Forgot Password")
+    link(rel='stylesheet' href='/css/material-login.css')
+    link(rel='stylesheet' href='/css/style.min.css')
+    link(rel='stylesheet' href='http://demo.geekslabs.com/materialize/v3.1/css/layouts/page-center.css')
+  else
+    link(rel='stylesheet' href='/css/materialize.min.css')
+  link(href="/css/font-awesome.css" rel="stylesheet")
+  link(rel='stylesheet' href='/css/perfect-scrollbar.css')
+  link(rel='stylesheet' href='/css/dropify.min.css')
+  link(href="http://demo.geekslabs.com/materialize/v3.1/css/plugins/media-hover-effects.css")
+  //- link(href="http://fonts.googleapis.com/icon?family=Material+Icons")
+
+
+
+  //- link(rel='stylesheet' href='/css/')
+  //- link(rel='stylesheet' href='/css/')

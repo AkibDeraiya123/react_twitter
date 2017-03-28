@@ -1,0 +1,55 @@
+extends ./layouts/main.pug
+
+block content
+
+
+    #login-page.row
+      .col.s12.z-depth-4.card-panel
+        form(class="login login-form", id="login" method="post" action="/forgotPassword")
+          .row
+            .input-field.col.s12.center
+              img.responsive-img.valign.profile-image-login(src='/images/profile/twiter.jpg', alt='')
+              h5.center Forgot Your Password
+
+          .row.margin
+            .input-field.col.s12
+              i.mdi-action-lock-outline.prefix
+              input(id="pas" name="pas" type="password" data-error=".errorTxt8")
+              input(id="usermail" name="usermail" type="hidden" value=email)
+              label(for="pas") New Password *
+              div(class="errorTxt8 center")
+
+          .row
+            .input-field.col.s12
+              input(name="submit" type="submit" class="btn waves-effect waves-light col s12 submit" value="Change")
+          .row
+            .input-field.col.s6.m6.l6
+              p.margin.medium-small
+                a(href='/register') Register Now!
+            .input-field.col.s6.m6.l6
+              p.margin.right-align.medium-small
+                a(class="modal-trigger waves-effect waves-light " href="#modal1") Forgot password ?
+              //- a.btn.waves-effect.waves-light.col.s12(href='index.html') Register Now
+
+    #modal1.modal
+      .modal-content
+        h4 Forgot Password
+        h6(class="center red-text", id="msgresponse")
+        h6(class="center indigo-text", id="successresponse")
+
+        form(class="login-form", id="login-form123" method="POST" onsubmit="return abcd();")
+          .row
+            .row.margin
+              .input-field.col.s12
+                i.mdi-communication-email.prefix
+                input(id="foremail" name="email" type="email" data-error=".errorTxt9")
+                label(for="pas") E-Mail *
+                div(class="errorTxt9 center")
+          .row
+            .input-field.col.s12
+              input(name="submit" type="submit" class="btn waves-effect waves-light col s12 submit" value="Get Link")
+
+
+
+
+
