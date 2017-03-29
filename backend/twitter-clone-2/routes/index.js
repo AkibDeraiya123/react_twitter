@@ -3,13 +3,13 @@ const multer = require('multer');
 const path = require('path');
 const DB = require('../helpers/db');
 const nodemailer = require('nodemailer');
-var crypto = require("crypto");
+const crypto = require("crypto");
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-      user: 'akib@improwised.com',
-      pass: 'akib@improwised',
+    user: 'akib@improwised.com',
+    pass: 'akib@improwised',
   },
 });
 
@@ -17,37 +17,9 @@ const upload = multer({ dest: path.resolve(__dirname, '../public/images/profile/
 const uploadTweet = multer({ dest: path.resolve(__dirname, '../public/images/tweet/') });
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  if (req.session.mail) {
-    return res.redirect('/login');
-  }
-  return res.redirect('/login');
-
-  const query = DB.builder()
-   .select()
-   .function(NOW())
-   .toParam();
-
-  DB.executeQuery(query, (error, results) => {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    res.render('index', {
-      title: `Time from the database is ${results.rows[0].now}`,
-    });
-  });
-});
-
-router.get('/login', (req, res, next) => {
-  res.render('login', {
-    title: 'Login',
-  });
-});
 
 router.post('/forgot', (req, res, next) => {
-  let email = req.body.emailforgot;
+  const email = req.body.emailforgot;
   const query = DB.builder()
     .select()
     .from('registration')
@@ -61,7 +33,7 @@ router.post('/forgot', (req, res, next) => {
     }
     // console.log(results.rows);
     if(results.rows.length > 0) {
-      let id = crypto.randomBytes(10).toString('hex');
+      const id = crypto.randomBytes(10).toString('hex');
 
       const query1 = DB.builder()
         .update()
@@ -69,16 +41,16 @@ router.post('/forgot', (req, res, next) => {
         .set('forgot_string', id)
         .where('email = ?', email)
         .toParam();
-      DB.executeQuery(query1, (error, results) => {
-        if (error) {
-          console.log(error);
-          next(error);
+      DB.executeQuery(query1, (error1, results1) => {
+        if (error1) {
+          console.log(error1);
+          next(error1);
           return;
         }
       });
 
-      let link = '<a href="http://localhost:3000/forgotpas/?m='+email+'&&random='+id+'">Click Here For Change Your Account Password</a>';
-      let maildata = {
+      const link = '<a href="http://localhost:3000/forgotpas/?m='+email+'&&random='+id+'">Click Here For Change Your Account Password</a>';
+      const maildata = {
         from: 'abcd@gmail', // sender address
         to: email, // list of receivers
         subject: 'Change Your Account Password', // Subject line
@@ -133,13 +105,6 @@ router.get('/forgotpas', (req, res, next) => {
 });
 //
 
-router.get('/register', (req, res, next) => {
-  res.render('register', {
-    title: 'Register',
-    // msg: 'Sorry Your Activation Link Wrong',
-  });
-});
-
 router.get('/logout', (req, res, next) => {
   req.session.destroy((err) => {
     if (err) {
@@ -152,19 +117,16 @@ router.get('/logout', (req, res, next) => {
 });
 
 router.get('/follow/:userid', (req, res, next) => {
-  // if (!req.session.mail) {
-  //   return res.redirect('/login');
-  // }
-  var result = {"status":"","msg":"","data":"",};
-
+  const result = { 'status': '', 'msg': '', 'data': '', };
   const user = req.params.userid;
-
   const query1 = DB.builder()
     .select()
     .from('registration')
     .where('user_id != ? AND user_id NOT IN ?', user, DB.builder().select().field('follower_id').from('follow').where('follow_id = ?', user))
     .toParam();
+
   DB.executeQuery(query1, (error, results) => {
+    // console.log(results);
     if (error) {
       result['status'] = 0;
       result['msg'] = "Error";
@@ -178,17 +140,40 @@ router.get('/follow/:userid', (req, res, next) => {
       res.send(result);
       return;
     }
+  });
+});
 
+router.post('/searchUser', (req, res, next) => {
+  const result = { 'status': '', 'msg': '', 'data': '', };
+  const user = req.body.user;
+  const serachuser = "%" + req.body.searchdata + "%";
 
+  const query1 = DB.builder()
+    .select()
+    .from('registration')
+    .where('user_id != ? AND user_id NOT IN ? AND fname like ?', user, DB.builder().select().field('follower_id').from('follow').where('follow_id = ?', user),serachuser)
+    .toParam();
+
+  DB.executeQuery(query1, (error, results) => {
+
+    if (error) {
+      result['status'] = 0;
+      result['msg'] = "Error";
+      result['data'] = "Something Went Wrong ! Please Try Again";
+      res.send(result);
+      return;
+    } else {
+      result['status'] = 1;
+      result['msg'] = "Found";
+      result['data'] = results.rows;
+      res.send(result);
+      return;
+    }
   });
 });
 
 router.post('/follow', (req, res, next) => {
-  // if (!req.session.mail) {
-  //   return res.redirect('/login');
-  // }
   var result = {"status":"","msg":"","data":"",};
-
   const follower = req.body.follower;
   const follow = req.body.follow;
   const query = DB.builder()
@@ -197,8 +182,6 @@ router.post('/follow', (req, res, next) => {
     .set('follower_id', follower)
     .set('follow_id', follow)
     .toParam();
-    // console.log(query);
-    // return false;
 
   DB.executeQuery(query, (error, results) => {
     if (error) {
@@ -603,9 +586,10 @@ router.post('/', upload.single('profile'), (req, res, next) => {
 router.post('/log', (req, res, next) => {
   var result = {"status":"","msg":"","data":""};
 
-  req.checkBody('email', 'E-Mail is required').notEmpty();
+
   req.check('pas', 'Password is required').notEmpty();
   req.check('email', 'Email is not valid').isEmail();
+  req.checkBody('email', 'E-Mail is required').notEmpty();
 
   var errors = req.validationErrors();
 
@@ -676,7 +660,7 @@ router.post('/log', (req, res, next) => {
       } else {
         result['status'] = 2;
         result['msg'] = "Wrong";
-        result['data'] = "Sorry! Your Email Or Password Wrong. Please Try Again With Correct Login Detail.";
+        result['data'] = "Your Email Or Password Wrong.";
         res.send(result);
 
       }
@@ -687,6 +671,26 @@ router.post('/log', (req, res, next) => {
 
 router.post('/ProfileUpload', upload.single('profile'), (req, res, next) => {
   var result = {"status":"","msg":"","data":""};
+
+  req.check('fname', 'Firstname Required').notEmpty();
+  req.check('lname', 'Lastname Required').notEmpty();
+  req.checkBody('phone', 'Enter Valide 10 Digit Phone Number').len(10);
+  req.checkBody('phone', 'Phone Number is accept only digit').isInt();
+  req.checkBody('phone', 'Phone Number Required').notEmpty();
+
+
+
+
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    result['status'] = 2;
+    result['msg'] = "There is require field";
+    result['data'] = errors;
+    res.send(result);
+    return;
+  };
 
   // console.log(req.body);
   query = DB.builder()
@@ -705,9 +709,6 @@ router.post('/ProfileUpload', upload.single('profile'), (req, res, next) => {
       result['data'] = "Please Try Again There is some problem. Please Make sure that all field is required and phone number must be a number only.";
       res.send(result);
       return;
-      // console.log(error);
-      // next(error);
-      // return;
     }
     result['status'] = 1;
     result['msg'] = "Success";
@@ -720,23 +721,22 @@ router.post('/ProfileUpload', upload.single('profile'), (req, res, next) => {
 router.post('/tweet', (req, res, next) => {
   var result = {"status":"","msg":"","data":""};
 
-  // if (!req.session.mail) {
-  //   return res.redirect('/home');
-  // }
+  req.checkBody('ccomment', 'Comment is required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    result['status'] = 2;
+    result['msg'] = "There is require field";
+    result['data'] = errors;
+
+    res.send(JSON.stringify(result));
+    return;
+    }
 
   console.log(req.body);
-  // return false;
-
   const msg = req.body.ccomment;
-  // console.log(msg);
-  // return false;
   const userid = req.body.user;
-  // let photo = '';
-  // if (req.file) {
-  //   photo = req.file.filename;
-  // } else {
-  //   photo = '';
-  // }
 
   const query = DB.builder()
     .insert()
@@ -759,7 +759,7 @@ router.post('/tweet', (req, res, next) => {
     result['data'] = "Congretulation ! Your Tweet Added Successfully";
     res.send(result);
     return;
-    // res.redirect('/home');
+
   });
 });
 

@@ -149,9 +149,11 @@ class Index2 extends React.Component {
           </form>
 
         </div>
-        {
-          this.state.alltweet ? this.displayList(this.state.alltweet) : <div className="container" style={{textAlign:"center",marginTop:"10px",backgroundColor:"#F5F5F5",padding: "10px",}}><h4>Sorry ! There is no tweet to display</h4></div>
-        }
+
+          {
+            this.state.alltweet ? this.displayList(this.state.alltweet) : <div className="container" style={{textAlign:"center",marginTop:"10px",backgroundColor:"#F5F5F5",padding: "10px",}}><h4>Sorry ! There is no tweet to display</h4></div>
+          }
+
       </div>
     );
   }

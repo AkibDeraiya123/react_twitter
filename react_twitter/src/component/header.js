@@ -22,6 +22,10 @@ class Header extends React.Component {
       lemailerror:'',
       lpassworderror:'',
       success :'',
+      loginEmailError:'',
+      loginPasswordError:'',
+      wrongLoginDetail:'',
+
 
     };
 
@@ -66,28 +70,20 @@ class Header extends React.Component {
       .send(a)
       .end(function(err, res) {
         if(!err) {
-          // console.log(res.text);
+          console.log(res.text);
           const a = JSON.parse(res.text);
           const status = a.status;
-          // console.log(status);
+
           if(status === 1) {
             console.log("-->",a.data);
             self.setState({success: a.data});
-            // if(cookie.load('userId')) {
-            //   console.log("cookie set previes")
-            //   cookie.remove('userId', { path: '/' });
-            // }
-            // cookie.save('userId', a.user, { path: '/' });
-            // // browserHistory.push('/dashboard');
+
           } if(status === 0) {
             self.setState({errormsg: a.data});
-            // console.log(">",a.data);
             console.log("error msg is",self.state.errormsg);
           }
           if(status === 2) {
             self.setState({erroremail:a.data});
-            // self.setState({errormsg: a.data});
-            // console.log(">",a.data);
             console.log("error msg is",self.state.erroremail);
           }
         }
@@ -95,6 +91,7 @@ class Header extends React.Component {
   }
 
   handleLogin(event) {
+    let self = this;
     event.preventDefault();
     let userLoginDetail = {email : this.state.login_username, pas : this.state.login_password, };
     var a = JSON.stringify(userLoginDetail);
@@ -105,27 +102,38 @@ class Header extends React.Component {
       .send(a)
       .end(function(err, res) {
         if(!err) {
-          // console.log(res.text);
+          console.log(res.text);
           const a = JSON.parse(res.text);
           const status = a.status;
 
           if(status === 4) {
+            let data = a.data;
+            data.map(function(item) {
+              if(item.param === "email") {
+                console.log(item);
+                self.setState({loginEmailError: item.msg,});
+              }
+              else if(item.param === "pas") {
+                  self.setState({loginPasswordError:item.msg,});
+                }
+                return true;
+              });
+            }
 
-
-          }
           if(status === 0) {
             alert(a.data)
 
           } if(status === 1) {
             alert(a.data)
           } if(status === 2) {
+            self.setState({wrongLoginDetail:a.data,});
             alert(a.data)
           } if(status === 3) {
             cookie.remove('userId');
             cookie.save('userId', a.data, { path: '/' });
             // alert(a.data);
             console.log("cookie is :", cookie.load('userId'));
-            browserHistory.push('/index');
+            browserHistory.push('/index2');
 
           }
         }
@@ -164,6 +172,18 @@ class Header extends React.Component {
 
     var lemailerror = "";
     var lpassworderror = "";
+    var loginfailed = "";
+
+    if (this.state.loginEmailError) {
+      lemailerror = <span> {this.state.loginEmailError} </span>;
+    }
+    if (this.state.loginPasswordError) {
+      lpassworderror = <span> {this.state.loginPasswordError} </span>;
+    }
+
+    if (this.state.wrongLoginDetail) {
+      loginfailed = <span> {this.state.wrongLoginDetail} </span>;
+    }
   // var currentLocation = window.location.pathname;
 
 
@@ -204,20 +224,20 @@ class Header extends React.Component {
             </div>
 
             <div className="modal-body">
+              <li className="errorField" style={{color:'red',listStyle:'none',textAlign:'center',}}>{loginfailed}</li>
+
               <form role="form" onSubmit={this.handleLogin}>
                 <div className="form-group">
                   <label htmlFor="usrname"><span className="glyphicon glyphicon-user"></span> E-Mail </label>
                   <input type="text" className="form-control" id="login_username" name="login_username" value={this.state.login_username} onChange={this.handleChange} placeholder="Enter email" />
-                  {lemailerror}
+                  <li className="errorField">{lemailerror}</li>
                 </div>
                 <div className="form-group">
                   <label htmlFor="psw"><span className="glyphicon glyphicon-eye-open"></span> Password</label>
-                  <input type="text" className="form-control" id="login_password" name="login_password" value={this.state.login_password} onChange={this.handleChange} placeholder="Enter password" />
-                  {lpassworderror}
+                  <input type="password" className="form-control" id="login_password" name="login_password" value={this.state.login_password} onChange={this.handleChange} placeholder="Enter password" />
+                  <li className="errorField">{lpassworderror}</li>
                 </div>
-                <div className="checkbox">
-                  <label><input type="checkbox" value="" />Remember me</label>
-                </div>
+
                 <button type="submit" className="btn btn-success btn-block"><span className="glyphicon glyphicon-off"></span> Login</button>
               </form>
             </div>

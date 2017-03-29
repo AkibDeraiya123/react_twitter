@@ -50,3 +50,9 @@ body {
 .navbar-toggle {
   background: black;
 }
+.form-group .errorField {
+  color: red;
+  margin: 0px;
+  font-family: sans-serif;
+  list-style: none;
+}

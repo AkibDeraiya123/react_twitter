@@ -1,0 +1,98 @@
+Api Documentation
+
+1) Registration
+    Method : POST
+    URL : http://localhost:5000/
+
+    Required Field :-
+      1)fname
+      2)lname
+      3)email
+      4)phone
+      5)pass
+    Response :-
+      1)success : {"status":1,"msg":"Inserted","data":"Data Inderted Successfully"}
+      2)Required Filed Error : {"status":0,"msg":"There is require field","data":[{"param":"fname","msg":"Username is required","value":""}],}
+      3)Email Already Registerd : {"status":2,"msg":"email already exist","data":"Email Already Exist. Please Enter Valid Email Address"}
+
+2) Login
+    Method : POST
+    URL :http://localhost:5000/log
+
+    Required Field :-
+      1)email
+      2)pass
+    Response :-
+      1)success : {"status":3,"msg":"Success","data":1}
+      2)Required Filed Error :
+        {"status":4,"msg":"There is require field","data":[{"param":"pas","msg":"Password is required","value":""},{"param":"email","msg":"Email is not valid","value":""}]}
+
+3) Home page
+    Method : GET
+    URL : http://localhost:5000/home/{userid}
+
+    Response :-
+      1)success :
+        {"status":0,"msg":"Data Found","data":[{"fname":"Akib","lname":"deraiya","tweet":"ffgh","activation_number":"febd820c71269189e2d3","profile":"default.png","timest":"2017-03-28T06:34:02.420Z","post_image":null},]}
+
+4) Profile Page
+    Method : GET
+    URL : http://localhost:5000/profile/{userId}
+
+    Response :-
+      1)success :
+        {"status":0,"msg":"Data found","tweet":[],"follower":[{"fname":"Om","lname":"Prakash","profile":"f94e3b2e41af07ab3875c06621562738","follower_id":33,"id":90}],"name":"ab cd","fname":"ab","lname":"cd","email":"abcd@gmail.cmo","phone":"9737334772","profilePhoto":"http://localhost:5000/images/profile/default.png"}
+
+5) New People Follow List Page
+    Method : GET
+    URL : http://localhost:5000/follow/{userId}
+
+    Response :-
+      1)success :
+        {"status":1,"msg":"Found","data":[{"user_id":104,"fname":"user","email":"test@gmail.com","lname":"test","password":"9797","profile":"default.png","phone_no":"9797979793","activation_number":"340c9d4276459f83591f","activation_status":1,"forgot_string":null},]}
+
+6) Follow New People
+    Method : POST
+    URL : http://localhost:5000/follow
+
+    Response :
+      1) Success : {"status":1,"msg":"Success","data":"You are Successfully follow"}
+
+7) Unfollow User
+    Method : GET
+    URL : http://localhost:5000/unfollow/{id}
+
+8) Update Profile Data :
+    Method : POST
+    URL : http://localhost:5000/ProfileUpload
+
+    Required Field :-
+      1)fname
+      2)lname
+      3)phone
+
+    Response :-
+      1)success : {"status":1,"msg":"Success","data":"Congretulation ! Your Profile is updated"}
+      2)Required Filed Error : {"status":2,"msg":"There is require field","data":[{"param":"fname","msg":"Firstname Required","value":""}]}
+
+9) Search User For Follow
+    Method : POST
+    URL : http://localhost:5000/searchUser
+
+    Required Field :-
+      1)searchdata
+      2)user
+
+
+    Response :-
+        1)success : {"status":1,"msg":"Found","data":[{"user_id":45,"fname":"f","email":"akibderadfiya123@gmail.com","lname":"f","password":"sd","profile":"default.png","phone_no":"9737334772","activation_number":"f8dc9420c587c04d83f9","activation_status":null,"forgot_string":null}]}
+        2)No Data Found : {"status":1,"msg":"Found","data":[]}
+
+10) Realese New Tweet
+
+    Method : POST
+    URL : http://localhost:5000/tweet
+
+    Required Field :-
+      1)ccomment
+      2)user

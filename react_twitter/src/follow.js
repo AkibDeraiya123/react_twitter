@@ -2,6 +2,8 @@ import React from 'react';
 import Header from './component/header';
 import request from 'superagent';
 import cookie from 'react-cookie';
+import { browserHistory } from 'react-router';
+
 // import { browserHistory } from 'react-router';
 
 
@@ -14,13 +16,24 @@ class Follow extends React.Component {
 
     this.state = {
       followUser:'',
+      serachString:'',
     }
 
     this.displayList = this.displayList.bind(this);
 
+    this.handleChange = this.handleChange.bind(this);
+
+
   }
-   componentWillMount() {
-   let self = this;
+  componentWillMount() {
+    // alert("hello called")
+    var coki =  cookie.load('userId');
+    if(coki) {
+    } else {
+      browserHistory.push("/");
+    }
+
+    let self = this;
     var a = `http://localhost:5000/follow/${cookie.load('userId')}`;
     request
       .get(a)
@@ -34,11 +47,35 @@ class Follow extends React.Component {
           alert(a.data);
         } else {
           self.setState({followUser: a.data});
-
         }
-
-     });
+      });
   }
+
+  handleChange(event) {
+    let self = this;
+    var coki =  cookie.load('userId');
+
+    let userDetail = {searchdata : event.target.value, user : coki,};
+    var a = JSON.stringify(userDetail);
+
+    request
+      .post('http://localhost:5000/searchUser')
+      .set('Content-Type', 'application/json')
+      .send(a)
+      .end(function(err, response){
+        console.log(response.text);
+        // return false;
+        var a = JSON.parse(response.text);
+
+        if(a.status === 0) {
+          alert(a.data);
+        } else {
+          self.setState({followUser: a.data});
+        }
+      });
+  }
+
+
 
   displayList(posts) {
     const list = posts.map((temp, index) => {
@@ -69,6 +106,7 @@ class Follow extends React.Component {
   }
 
   render() {
+
     return (
       <div>
         <div>
@@ -76,6 +114,11 @@ class Follow extends React.Component {
         </div>
         <div className="container " style={{backgroundColor:"#F5F5F5",padding: "10px",}}>
           <h3 style={{textAlign:'center',}}>Follow This People</h3>
+          <div style={{marginBottom:'10px',}}>
+            <form>
+              <input className="form-control" type="text" name="search" id="search"  onChange={this.handleChange} placeholder="Search user from Firstname..." />
+            </form>
+          </div>
           {
             this.state.followUser ? this.displayList(this.state.followUser) : <div className="container" style={{textAlign:"center",marginTop:"10px",backgroundColor:"#F5F5F5",padding: "10px",}}><h4>Sorry ! There is no tweet to display</h4></div>
           }

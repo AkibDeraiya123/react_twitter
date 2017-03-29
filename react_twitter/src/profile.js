@@ -20,12 +20,18 @@ class Profile extends React.Component {
       lname:'',
       phone:'',
       email:'',
+      errorTweet : '',
+      errorFname:'',
+      errorLname:'',
+      errorPhone:'',
+
+
 
     }
 
     this.displayList = this.displayList.bind(this);
     this.displayFollowerList = this.displayFollowerList.bind(this);
-    this.displayUserDetail = this.displayUserDetail.bind(this);
+
     this.handleChange = this.handleChange.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
@@ -50,6 +56,7 @@ class Profile extends React.Component {
   }
 
   handleRegister(event) {
+    let self = this;
     event.preventDefault();
     var coki =  cookie.load('userId');
     let userLoginDetail = {ccomment : this.state.new_tweet,user:coki,};
@@ -62,6 +69,9 @@ class Profile extends React.Component {
       .end(function(err, res) {
           // console.log(res.text);
           const a = JSON.parse(res.text);
+          if(a.status === 2) {
+            self.setState({errorTweet:a.data[0].msg,});
+          }
           if(a.status === 1) {
             alert(a.data);
            location.reload();
@@ -73,6 +83,7 @@ class Profile extends React.Component {
   }
 
   handleUpload(event) {
+    let self = this;
     event.preventDefault();
     var coki =  cookie.load('userId');
     let userDetail = {fname : this.state.fname,lname:this.state.lname,phone: this.state.phone,user:coki,};
@@ -84,10 +95,33 @@ class Profile extends React.Component {
       .send(a)
       .end(function(err, res) {
           console.log(res.text);
-          // return false;
           const a = JSON.parse(res.text);
+
+          if(a.status === 2) {
+            // console.log("this os")
+            // console.log("abcd",this.state.errorFname);
+            let data = a.data;
+            data.map(function(item) {
+
+              if(item.param === "fname") {
+                // console.log(item);
+                self.setState({errorFname: item.msg,});
+              }
+              if(item.param === "lname") {
+                  self.setState({errorLname:item.msg,});
+              }
+              if(item.param === "phone") {
+                  self.setState({errorPhone:item.msg,});
+              }
+              // return true;
+            });
+            // console.log("abcd",self.state.errorFname);
+            // console.log(self.state.errorLname);
+            // console.log(self.state.errorPhone);
+
+          }
+
           if(a.status === 1) {
-            // alert(a.data);
            location.reload();
           }
           if(a.status === 0) {
@@ -183,8 +217,32 @@ class Profile extends React.Component {
     return (list);
   }
 
-  displayUserDetail() {
-    const list =
+
+
+  render() {
+
+    var ErrorTweet;
+    if (this.state.errorTweet) {
+      ErrorTweet = <span> {this.state.errorTweet} </span>;
+    }
+
+    var firstnameError = "";
+    var lastnameError = "";
+    var phonenumberError = "";
+    var displayUserDetail = "";
+
+    if (this.state.errorFname) {
+      firstnameError = <span> {this.state.errorFname} </span>;
+    }
+    if (this.state.errorLname) {
+      lastnameError = <span> {this.state.errorLname} </span>;
+    }
+
+    if (this.state.errorPhone) {
+      phonenumberError = <span> {this.state.errorPhone} </span>;
+    }
+
+    displayUserDetail =
       <div className="table-responsive container">
         <div className="col-md-12" style={{textAlign:"center",}}>
           <h4>Update Your Profile</h4>
@@ -196,18 +254,23 @@ class Profile extends React.Component {
            Firstname
           </label>
           <input onChange={this.handleChange} style={{width:"100%"}} type="text" id="fname" name="fname" className="form-control" value={this.state.fname} placeholder="Enter Firstname" />
+          <li className="errorField" style={{color:'red',listStyle:'none',}}>{firstnameError}</li>
+
         </div>
         <div className="form-group" style={{width:"100%",}}>
           <label htmlFor="fname">
            Lastname
           </label>
           <input onChange={this.handleChange} style={{width:"100%"}} type="text" id="lname" name="fname" className="form-control" value={this.state.lname} placeholder="Enter Firstname" />
+          <li className="errorField" style={{color:'red',listStyle:'none',}}>{lastnameError}</li>
         </div>
          <div className="form-group" style={{width:"100%",}}>
           <label htmlFor="fname">
            Phone Number
           </label>
           <input onChange={this.handleChange} style={{width:"100%"}} type="text" id="phone" name="fname" className="form-control" value={this.state.phone} placeholder="Enter Firstname" />
+          <li className="errorField" style={{color:'red',listStyle:'none',}}>{phonenumberError}</li>
+
         </div>
         <div className="form-group" style={{marginTop:"10px",textAlign:"center",width:"100%"}}>
           <button type="submit" className="btn btn-primary" style={{width:"%"}}> Update Profile</button>
@@ -217,10 +280,7 @@ class Profile extends React.Component {
 
       </div>
     ;
-    return(list);
-  }
 
-  render() {
 
     return (
       <div>
@@ -262,6 +322,7 @@ class Profile extends React.Component {
           <form className="form-inline" onSubmit={this.handleRegister}>
             <div className="form-group" style={{width:"100%",}}>
               <textarea style={{width:"100%"}} className="form-control" id="new_tweet" name="new_tweet" value={this.state.new_tweet} onChange={this.handleChange} placeholder="Enter Content of new tweet" />
+              <li className="errorField">{ErrorTweet}</li>
             </div>
             <div className="form-group" style={{marginTop:"10px",textAlign:"left",width:"100%"}}>
               <button type="submit" className="btn btn-primary" style={{width:"20%"}}> Post</button>
@@ -288,7 +349,7 @@ class Profile extends React.Component {
             }
           </div>
           <div id="menu2" className="tab-pane fade">
-            {this.displayUserDetail()}
+            {displayUserDetail}
           </div>
         </div>
         </div>

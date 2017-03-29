@@ -21,6 +21,7 @@ class Index2 extends React.Component {
     this.state = {
       new_tweet:'',
       tweet_image:'',
+      errorTweet : '',
       alltweet:'',
     }
 
@@ -42,7 +43,7 @@ class Index2 extends React.Component {
   }
 
   handleRegister(event) {
-    // let self=this;
+    let self=this;
     event.preventDefault();
     var coki =  cookie.load('userId');
     let userLoginDetail = {ccomment : this.state.new_tweet,user:coki,};
@@ -56,6 +57,9 @@ class Index2 extends React.Component {
       .end(function(err, res) {
           console.log(res.text);
           const a = JSON.parse(res.text);
+          if(a.status === 2) {
+            self.setState({errorTweet:a.data[0].msg,});
+          }
           if(a.status === 1) {
             alert(a.data);
            location.reload();
@@ -79,6 +83,7 @@ class Index2 extends React.Component {
       .get(a)
       .set('Content-Type', 'application/json')
       .end(function(err, response){
+
         console.log(response.text);
         var a = JSON.parse(response.text);
 
@@ -112,6 +117,11 @@ class Index2 extends React.Component {
   }
 
   render() {
+    var ErrorTweet;
+    if (this.state.errorTweet) {
+      ErrorTweet = <span> {this.state.errorTweet} </span>;
+    }
+
     return (
       <div>
         <div>
@@ -123,11 +133,12 @@ class Index2 extends React.Component {
           <form className="form-inline" onSubmit={this.handleRegister}>
             <div className="form-group" style={{width:"100%",}}>
               <textarea style={{width:"100%"}} className="form-control" id="new_tweet" name="new_tweet" value={this.state.new_tweet} onChange={this.handleChange} placeholder="Enter Content of new tweet" />
+              <li className="errorField">{ErrorTweet}</li>
             </div>
-            <div className="form-group" style={{width:"100%",marginTop:"10px",  }}>
+            {/*<div className="form-group" style={{width:"100%",marginTop:"10px",  }}>
               <lable htmlFor="tweet_image">Upload Image</lable>
               <input style={{width:"100%"}} className="" type="file" id="tweet_image" name="tweet_image" value={this.state.tweet_image} onChange={this.handleChange} placeholder="Enter Content of new tweet" />
-            </div>
+            </div>*/}
             <div className="form-group" style={{marginTop:"10px",textAlign:"left",width:"100%"}}>
               <button type="submit" className="btn btn-primary" style={{width:"20%"}}> Post</button>
             </div>
