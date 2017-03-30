@@ -22,7 +22,7 @@ const config = {
 };
 
 const pool = new PoolCon(config);
-
+// console.log(config)
 // Export
 module.exports = {
   executeQuery(query, callback) {

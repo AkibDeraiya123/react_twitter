@@ -131,13 +131,13 @@ router.get('/follow/:userid', (req, res, next) => {
       result['status'] = 0;
       result['msg'] = "Error";
       result['data'] = "Something Went Wrong ! Please Try Again";
-      res.send(result);
+      res.status(200).send(result);
       return;
     } else {
       result['status'] = 1;
       result['msg'] = "Found";
       result['data'] = results.rows;
-      res.send(result);
+      res.status(200).send(result);
       return;
     }
   });
@@ -160,13 +160,13 @@ router.post('/searchUser', (req, res, next) => {
       result['status'] = 0;
       result['msg'] = "Error";
       result['data'] = "Something Went Wrong ! Please Try Again";
-      res.send(result);
+      res.status(201).send(result);
       return;
     } else {
       result['status'] = 1;
       result['msg'] = "Found";
       result['data'] = results.rows;
-      res.send(result);
+      res.status(201).send(result);
       return;
     }
   });
@@ -188,13 +188,32 @@ router.post('/follow', (req, res, next) => {
       result['status'] = 0;
       result['msg'] = 'Error';
       result['data'] = "Something Went Wrong Please Try Again";
-      res.send(result);
+      res.status(201).send(result);
       return;
     }
-    result['status'] = 1;
-    result['msg'] = 'Success';
-    result['data'] = "You are Successfully follow";
-    res.send(result);
+
+    const query1 = DB.builder()
+      .select()
+      .from('follow')
+      .order("id", false)
+      .limit(1)
+      .toParam();
+
+    DB.executeQuery(query1, (error, results) => {
+      if (error) {
+        next(error);
+        return;
+      }
+
+      result['status'] = 1;
+      result['msg'] = 'Success';
+      result['data'] = results.rows[0].id;
+      console.log(result);
+      res.status(201).send(result);
+
+    });
+
+
     return;
 
   });
@@ -219,14 +238,14 @@ router.get('/unfollow/:userid', (req, res, next) => {
       result['status'] = 0;
       result['msg'] = 'Error';
       result['data'] = "Something Went Wrong Please Try Again";
-      res.send(result);
+      res.status(200).send(result);
       return;
     }
 
     result['status'] = req.session.user_id;
     result['msg'] = 'Success' + req.session.user_id;
     result['data'] = "You are Successfully follow";
-    res.send(result);
+    res.status(200).send(result);
     return;
 
   });
@@ -336,15 +355,17 @@ router.get('/viewprofile/:userid', (req, res, next) => {
 
 
 router.get('/profile/:userid', (req, res, next) => {
+  // console.log("called");
   // if (!req.session.mail) {
   //   return res.redirect('/login');
   //   return false;
   // }
+  // console.log("hello");
 
   var result = {"status":"","msg":"","tweet":"","follower":"","name":"","fname":"","lname":"","email":"","phone":"","profilePhoto":"",};
 
- const user = req.params.userid;
-
+  const user = req.params.userid;
+  // console.log("=>userid is:", user);
   let follow = '';
   let tweet = '';
   const query = DB.builder()
@@ -366,6 +387,7 @@ router.get('/profile/:userid', (req, res, next) => {
       next(error);
       return;
     }
+    // console.log("called");
 
     const query1 = DB.builder()
       .select()
@@ -378,12 +400,15 @@ router.get('/profile/:userid', (req, res, next) => {
       .join(DB.builder().select().from('follow'), 'f', 'r.user_id = f.follower_id')
       .where('follow_id = ?', user)
       .toParam();
-
+      // console.log(query1);
     DB.executeQuery(query1, (error1, followers) => {
+      // console.log(followers);
+
       if (error1) {
         next(error1);
         return;
       }
+  // console.log("called");
 
       const profileQuery = DB.builder()
         .select()
@@ -398,6 +423,7 @@ router.get('/profile/:userid', (req, res, next) => {
         }
 
         // console.log(profile.rows);
+  // console.log("called");
 
         follow = followers.rows;
         tweet = tweets.rows;
@@ -422,9 +448,10 @@ router.get('/profile/:userid', (req, res, next) => {
         result['email'] = profile.rows[0].email;
         result['phone'] = profile.rows[0].phone_no;
 
+        // consolo.log("this is type",typeof(result));
 
-        res.send(result)
-        return ;
+        res.status(200).send(result);
+        return;
 
       });
     });
@@ -468,7 +495,7 @@ router.get('/home/:userid', (req, res, next) => {
     result['data'] = results.rows;
     result['userid'] = req.session.user_id;
 
-    res.send(result);
+    res.status(200).send(result);
     }
 
 
@@ -522,6 +549,9 @@ router.get('/active', (req, res, next) => {
 });
 
 router.post('/', upload.single('profile'), (req, res, next) => {
+  // console.log(req.body);
+  // console.log("fname",req.body.fname);
+  // return false;
   let id = crypto.randomBytes(10).toString('hex');
   var result = {"status":"","msg":"","data":""};
 
@@ -559,6 +589,7 @@ router.post('/', upload.single('profile'), (req, res, next) => {
       .set("activation_status",1)
       .set('activation_number', id)
       .toParam();
+    // console.log(query);
 
 
     DB.executeQuery(query, (error, results) => {
@@ -568,17 +599,12 @@ router.post('/', upload.single('profile'), (req, res, next) => {
           result['data'] = "Email Already Exist. Please Enter Valid Email Address";
           res.send(result);
           return;
-        // console.log("error",error);
-
-        // console.log("error",error.detail);
-        // next(error);
-        // return;
       }
 
       result['status'] = 1;
       result['msg'] = "Inserted";
       result['data'] = "Data Inderted Successfully";
-      res.send(result);
+      res.status(200).send(result);
     });
   }
 });
@@ -634,7 +660,7 @@ router.post('/log', (req, res, next) => {
             result['status'] = 0;
             result['msg'] = "Error";
             result['data'] = "Sorry Something Went Wrong ! Please Try Again";
-            res.send(result);
+            res.status(201).send(result);
           }
 
         if(check.rows.length > 0) {
@@ -646,13 +672,13 @@ router.post('/log', (req, res, next) => {
             result['status'] = 3;
             result['msg'] = "Success";
             result['data'] = results.rows[0].user_id;
-            res.send(result);
+            res.status(201).send(result);
           } else {
 
             result['status'] = 1;
             result['msg'] = "Not Active";
             result['data'] = "Your Login id and password is correct. But You have not active your account. Please active your account.";
-            res.send(result);
+            res.status(201).send(result);
 
 
           };
@@ -661,7 +687,7 @@ router.post('/log', (req, res, next) => {
         result['status'] = 2;
         result['msg'] = "Wrong";
         result['data'] = "Your Email Or Password Wrong.";
-        res.send(result);
+        res.status(201).send(result);
 
       }
     }
@@ -678,17 +704,13 @@ router.post('/ProfileUpload', upload.single('profile'), (req, res, next) => {
   req.checkBody('phone', 'Phone Number is accept only digit').isInt();
   req.checkBody('phone', 'Phone Number Required').notEmpty();
 
-
-
-
-
   var errors = req.validationErrors();
 
   if (errors) {
     result['status'] = 2;
     result['msg'] = "There is require field";
     result['data'] = errors;
-    res.send(result);
+    res.status(201).send(result);
     return;
   };
 
@@ -707,13 +729,13 @@ router.post('/ProfileUpload', upload.single('profile'), (req, res, next) => {
       result['status'] = 0;
       result['msg'] = "Error";
       result['data'] = "Please Try Again There is some problem. Please Make sure that all field is required and phone number must be a number only.";
-      res.send(result);
+      res.status(201).send(result);
       return;
     }
     result['status'] = 1;
     result['msg'] = "Success";
     result['data'] = "Congretulation ! Your Profile is updated";
-    res.send(result);
+    res.status(201).send(result);
     return;
   });
 });
@@ -750,14 +772,14 @@ router.post('/tweet', (req, res, next) => {
       result['status'] = 0;
       result['msg'] = "Error";
       result['data'] = "There is some error please try again";
-      res.send(result);
+      res.status(201).send(result);
       return;
 
     }
     result['status'] = 1;
     result['msg'] = "Submitter";
     result['data'] = "Congretulation ! Your Tweet Added Successfully";
-    res.send(result);
+    res.status(201).send(result);
     return;
 
   });

@@ -197,13 +197,13 @@ class Header extends React.Component {
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
               </button>
-              <a className="navbar-brand" href="/index">Twitter</a>
+              <a className="navbar-brand" href="/index2">Twitter</a>
             </div>
 
             <div className="collapse navbar-collapse" id="myNavbar">
 
               <ul className="nav navbar-nav navbar-right">
-                {(cookie.load('userId') ? <li className="active"><a href="/index">Home</a></li> : "" )}
+                {(cookie.load('userId') ? <li className="active"><a href="/index2">Home</a></li> : "" )}
                 {(cookie.load('userId') ? <li><a href="/profile">Profile</a></li> :  "" )}
                 {(cookie.load('userId') ? <li><a href="/follow">Follow</a></li> : "" )}
                 {(cookie.load('userId') ? <li><a href="logout">Logout</a></li> : "" )}
