@@ -1,0 +1,30 @@
+root: false
+
+env:
+  node: true
+  es6: true
+
+extends:
+  "airbnb"
+
+globals:
+  log: true
+
+/*plugins:
+  jsx: true,
+  "rules": {
+    "jsx/uses-factory": [1, {"pragma": "JSX"}],
+    "jsx/factory-in-scope": [1, {"pragma": "JSX"}],
+    "jsx/mark-used-vars": 1,
+    "jsx/no-undef": 1
+  }*/
+
+
+rules:
+  vars-on-top: 0
+
+  # Warnings
+  max-len: [1]
+
+  # Errors
+  quotes: [1, "single", { "avoidEscape": true, "allowTemplateLiterals": true }]

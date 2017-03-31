@@ -7,9 +7,9 @@ import './App.css';
 
 class App extends React.Component {
   componentWillMount() {
-    let a = cookie.load('userId')
-        if(a > 0) {
-         browserHistory.push("/index");
+    const a = cookie.load('userId');
+    if (a > 0) {
+         browserHistory.push('/index2');
         }
   }
   render() {

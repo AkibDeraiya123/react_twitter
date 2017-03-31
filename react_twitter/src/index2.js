@@ -31,31 +31,25 @@ class Index2 extends React.Component {
   }
 
   handleChange(event) {
-    // event.preventDefault();
-    console.log(event.target);
-
-    if(event.target.id === 'new_tweet') {
+    if (event.target.id === 'new_tweet') {
       this.setState({ new_tweet: event.target.value });
     }
-     if(event.target.id === 'tweet_image') {
+    if (event.target.id === 'tweet_image') {
       this.setState({ tweet_image: event.target.value });
     }
   }
 
   handleRegister(event) {
-    let self=this;
+    const self=this;
     event.preventDefault();
-    var coki =  cookie.load('userId');
-    let userLoginDetail = {ccomment : this.state.new_tweet,user:coki,};
-    var a = JSON.stringify(userLoginDetail);
-    console.log("This is print from frontend",JSON.stringify(userLoginDetail));
-    // return fals  e;
+    const coki =  cookie.load('userId');
+    const userLoginDetail = { ccomment: this.state.new_tweet, user: coki };
+    const a = JSON.stringify(userLoginDetail);
     request
       .post('http://localhost:5000/tweet')
       .set('Content-Type', 'application/json')
       .send(a)
       .end(function(err, res) {
-          console.log(res.text);
           const a = JSON.parse(res.text);
           if(a.status === 2) {
             self.setState({errorTweet:a.data[0].msg,});
@@ -71,12 +65,12 @@ class Index2 extends React.Component {
   }
 
   componentWillMount() {
-    var coki =  cookie.load('userId');
+    const coki =  cookie.load('userId');
     if(coki) {
     } else {
       browserHistory.push("/");
    }
-    let self = this;
+    const self = this;
     var a = `http://localhost:5000/home/${cookie.load('userId')}`;
     // alert(a);
     request
@@ -84,7 +78,7 @@ class Index2 extends React.Component {
       .set('Content-Type', 'application/json')
       .end(function(err, response){
 
-        console.log(response.text);
+        // console.log(response.text);
         var a = JSON.parse(response.text);
 
         if(a.status === 0) {
@@ -99,11 +93,24 @@ class Index2 extends React.Component {
 
   displayList(posts) {
     const list = posts.map((temp, index) => {
+      // console.log(temp);
+      let imageurl = "";
       const a = new Date(temp.timest)
+      // console.log(temp.profile);
+      // if(temp.profile != "null")
+      if(temp.profile !== "null") {
+        imageurl = "http://localhost:5000/images/profile/" + temp.profile;
+      } else {
+        imageurl = "http://localhost:5000/images/profile/default.png";
+
+      }
+      // console.log(imageurl);
       return (
 
           <div className="container" style={{backgroundColor:"#F5F5F5",padding: "10px",marginTop:"10px"}}>
             <div className="tweetheader" style={{ marginBottom:"10px"}} >
+            <img src={imageurl} className="img-circle" style={{height:"30px",}} />
+            &nbsp;
               <b className="">{temp.fname} {temp.lname}</b>
               <b className="pull-right ">{("0" + a.getDate()).slice(-2)}/{("0" + (a.getMonth() + 1)).slice(-2)}/{a.getFullYear()} {("0" + a.getHours()).slice(-2)}:{("0" + a.getMinutes()).slice(-2)}:{("0" + a.getSeconds()).slice(-2)}</b>
             </div>

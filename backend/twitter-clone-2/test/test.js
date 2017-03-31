@@ -4,41 +4,41 @@ const app = require('../app');
 
 
 const data = {
-      user_id: 19,
-      fname:'this is fname',
-      lname:'this is lname',
-      phone: 1234567890,
-      email: 'tesdyyut@improwised.com',
-      password: 'test',
-      unfollowUserId:'',
+  user_id: 19,
+  fname: 'this is fname',
+  lname: 'this is lname',
+  phone: 1234567890,
+  email: 'tesdyyut@improwised.com',
+  password: 'test',
+  unfollowUserId: '',
 };
 
 const ProfileUploadData = {
-      fname:'this is fname1',
-      lname:'this is lname1',
-      phone: 9898989898,
-      user: 19,
+  fname: 'this is fname1',
+  lname: 'this is lname1',
+  phone: 9898989898,
+  user: 19,
 };
 
 const logindata = {
-      email: 'tesdyyut@improwised.com',
-      pas: 'test',
+  email: 'tesdyyut@improwised.com',
+  pas: 'test',
 };
 
 const tweetData = {
-  ccomment: "this is comment",
+  ccomment: 'this is comment',
   user: 20,
-}
+};
 
 const followNewUser = {
-  follower:19,
-  follow:20,
-}
+  follower: 19,
+  follow: 20,
+};
 
 const searchUserData = {
-  searchdata:'a',
-  user:20,
-}
+  searchdata: 'a',
+  user: 20,
+};
 
 describe('POST/', function () {
   it('This is for Register New User', (done) => {
@@ -66,9 +66,9 @@ describe('POST/log', function () {
     .end((err, res) => {
       (res.status.should.be.equal(201));
       done();
-      });
     });
   });
+});
 
 
 describe('POST/tweet', function () {
@@ -149,7 +149,6 @@ describe('GET/profile/19', function () {
     .get('/profile/19')
     .expect('Content-type', '/json/')
     .end(function (err, res) {
-
       res.status.should.be.equal(200);
       done();
     });
@@ -164,7 +163,6 @@ describe('GET/home/19', function () {
     .get('/home/19')
     .expect('Content-type', '/json/')
     .end(function (err, res) {
-
       res.status.should.be.equal(200);
       done();
     });
@@ -179,7 +177,6 @@ describe('GET/follow/19', function () {
     .get('/follow/19')
     .expect('Content-type', '/json/')
     .end(function (err, res) {
-
       res.status.should.be.equal(200);
       done();
     });
@@ -194,7 +191,6 @@ describe('GET/unfollow/' + data.unfollowUserId, function () {
     .get('/unfollow/' + data.unfollowUserId)
     .expect('Content-type', '/json/')
     .end(function (err, res) {
-
       res.status.should.be.equal(200);
       done();
     });

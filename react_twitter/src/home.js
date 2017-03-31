@@ -11,7 +11,7 @@ import './App.css';
 class App extends React.Component {
 
   render() {
-    console.log((cookie.load('userId'));
+    console.log((cookie.load('userId')));
     return (
       <div className="App">
         <div>
